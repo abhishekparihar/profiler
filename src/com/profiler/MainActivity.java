@@ -110,7 +110,6 @@ public class MainActivity extends Activity {
 			Bitmap useThisBitmap = Bitmap.createBitmap(bitmap);
 			// bitmap.recycle();
 			// if(imagePath!=null){
-			System.out.println("Hi I am try to open Bit map");
 			wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
 			wallpaperDrawable = wallpaperManager.getDrawable();
 			wallpaperManager.setBitmap(useThisBitmap);
@@ -120,28 +119,37 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void setRingTone(String path) {
-		File k = new File(path); // path is a file to sdcard/media/ringtone
+	public void setRingTone(String path) throws IOException {
+		// File audioFile = new File(path);
 
+		//File audioFile = new File("/mnt/sdcard/Music/Maahi.mp3");
+		File audioFile = new File(path);
 		ContentValues values = new ContentValues();
-		values.put(MediaStore.MediaColumns.DATA, k.getAbsolutePath());
-		values.put(MediaStore.MediaColumns.TITLE, "My Song title");
-		values.put(MediaStore.MediaColumns.SIZE, 215454);
+		values.put(MediaStore.MediaColumns.DATA, audioFile.getAbsolutePath());
+		values.put(MediaStore.MediaColumns.TITLE, audioFile.getName());
+		values.put(MediaStore.MediaColumns.SIZE, audioFile.getTotalSpace());
 		values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
-		values.put(MediaStore.Audio.Media.ARTIST, "Madonna");
-		values.put(MediaStore.Audio.Media.DURATION, 230);
 		values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
 		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
 		values.put(MediaStore.Audio.Media.IS_ALARM, false);
 		values.put(MediaStore.Audio.Media.IS_MUSIC, false);
 
 		// Insert it into the database
-		Uri uri = MediaStore.Audio.Media.getContentUriForPath(k
+		Uri uri = MediaStore.Audio.Media.getContentUriForPath(audioFile
 				.getAbsolutePath());
 		Uri newUri = MainActivity.this.getContentResolver().insert(uri, values);
 
 		RingtoneManager.setActualDefaultRingtoneUri(MainActivity.this,
 				RingtoneManager.TYPE_RINGTONE, newUri);
+	}
+
+	private String removeExtras(String path) {
+		path = path.replace("/file:", "");
+		path = path.replace("/content:", "");
+		path = path.replace("%20", " ");
+		path = path.replace("/storage/emulated/0", "/mnt/sdcard");
+
+		return path;
 	}
 	
 	private void setRingtoneVolume(int volume){
@@ -173,7 +181,11 @@ public class MainActivity extends Activity {
 		protected Void doInBackground(ProfileModel... params) {
 			profile = params[0];
 			changeWallpaper(profile.getWallpaper());
-			setRingTone(profile.getRingtone());
+			try {
+				setRingTone(profile.getRingtone());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			setRingtoneVolume(profile.getVolume());
 			return null;
 		}
