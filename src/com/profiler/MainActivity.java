@@ -121,12 +121,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void setRingTone(String path) {
-		File k = new File(path); // path
-									// is
-									// a
-									// file
-									// to
-		// /sdcard/media/ringtone
+		File k = new File(path); // path is a file to sdcard/media/ringtone
 
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.MediaColumns.DATA, k.getAbsolutePath());
