@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -78,15 +79,32 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this,
+				/*Intent intent = new Intent(MainActivity.this,
 						CreateProfileActivity.class);
-				startActivity(intent);
+				startActivity(intent);*/
+				
+				setRingtoneVolume(1);
 			}
 		});
 
 		showList(getProfileList());
 		setNFCAdapter();
 		onClickReadTag();
+	}
+
+	private void setRingtoneVolume(int volume){
+		if(volume == 0){
+			AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT); 
+		}else if(volume >= 1){
+			volume=volume-1;
+
+			AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
+			int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+			int streamMinVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
+			Toast.makeText(MainActivity.this, Integer.toString(streamMinVolume), Toast.LENGTH_LONG).show(); //I got 7
+			audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, AudioManager.FLAG_PLAY_SOUND);
+		}
 	}
 
 	private List<ProfileModel> getProfileList() {
