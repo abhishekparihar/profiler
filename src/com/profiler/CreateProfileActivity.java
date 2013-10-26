@@ -29,6 +29,7 @@ public class CreateProfileActivity extends Activity {
 	Button openGallery, pickAudio;
 	SeekBar volumeBar;
 	int volumeLevel;
+	ImageView imageViewMode;
 	ProfileModel profileModel;
 	final static String TAG = "CreateProfileActivity";
 	EditText txtProfileName;
@@ -44,6 +45,7 @@ public class CreateProfileActivity extends Activity {
 		pickAudio = (Button) findViewById(R.id.pickAudio);
 
 		volumeBar = (SeekBar) findViewById(R.id.volumeBar);
+		imageViewMode=(ImageView)findViewById(R.id.imageViewMode);
 		
 		imgVolume=(ImageView)findViewById(R.id.imageViewMode);
 		

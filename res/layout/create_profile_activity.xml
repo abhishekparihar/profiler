@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/button_wallpaper"
+            android:background="@drawable/button_bg"
             android:text="Change Wallpaper"
             android:textColor="#ffffff"
             android:textSize="12sp" />
@@ -85,7 +85,7 @@
         android:id="@+id/pickAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_wallpaper"
+        android:background="@drawable/button_bg"
         android:text="@string/ringtone"
         android:textColor="#ffffff"
         android:textSize="12sp" />
@@ -95,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:background="@drawable/button"
+        android:background="@drawable/button_bg"
         android:onClick="onSaveBtnClicked"
         android:text="@string/save"
         android:textColor="#ffffff"

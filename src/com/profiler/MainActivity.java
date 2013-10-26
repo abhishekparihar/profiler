@@ -120,8 +120,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void setRingTone(String path) throws IOException {
-		// File audioFile = new File(path);
-
 		//File audioFile = new File("/mnt/sdcard/Music/Maahi.mp3");
 		File audioFile = new File(path);
 		ContentValues values = new ContentValues();
@@ -297,7 +295,7 @@ public class MainActivity extends Activity {
 				
 				setCurrentProfile(result);
 				
-				Toast.makeText(getApplicationContext(), "Tag Contains >>>>>>>> \n " + result, Toast.LENGTH_LONG).show();  
+				//Toast.makeText(getApplicationContext(), "Tag Contains >>>>>>>> \n " + result, Toast.LENGTH_LONG).show();  
 			}  
 		} 
 	}
