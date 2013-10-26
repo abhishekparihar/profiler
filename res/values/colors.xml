@@ -3,5 +3,8 @@
 
     <color name="dk_gray">#80000000</color>
     <color name="black">#000000</color>
+    <color name="dkr_gray">#B3000000</color>
+    <color name="green">#82FA58</color>
+    <color name="orange">#FF8000</color>
 
 </resources>
