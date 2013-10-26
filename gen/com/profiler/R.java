@@ -12,8 +12,12 @@ public final class R {
     }
     public static final class color {
         public static final int dk_gray=0x7f040000;
+<<<<<<< HEAD
         public static final int dkr_gray=0x7f040001;
         public static final int white=0x7f040002;
+=======
+        public static final int white=0x7f040001;
+>>>>>>> 97842d4dd99a9ebcb8a64b9feb7904626aa46481
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
