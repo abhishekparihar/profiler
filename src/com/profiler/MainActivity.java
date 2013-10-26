@@ -13,10 +13,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
 public class MainActivity extends Activity {
+	
+	final static String TAG = "MainActivity";
 
 	private FileInputStream is;
 	private BufferedInputStream bis;
@@ -29,12 +32,6 @@ public class MainActivity extends Activity {
 	}
 
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 
 
 	public void onChangeClicked(View v){
@@ -62,4 +59,16 @@ public class MainActivity extends Activity {
 		//	}
 	}
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+
+	public void onCreateProfileClicked(View v) {
+		Log.i(TAG, "onCreateProfileClicked");
+	}
+    
 }
