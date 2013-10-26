@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,6 +60,8 @@ public class MainActivity extends Activity {
 	private void getProfileList() {
 		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
 		List<ProfileModel> mList=mProfileDbAdapter.getProfileList();
+		
+		Log.i(TAG, "test");
 		
 		
 	}

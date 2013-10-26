@@ -18,7 +18,7 @@ public class ProfileDbAdapter extends DbAdapter {
     }
 
     protected void setDbName() {
-        this.dbName = "my_checkins";
+        this.dbName = "profile";
     }
 
     protected void setDbColumns() {
