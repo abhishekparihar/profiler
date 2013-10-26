@@ -1,10 +1,14 @@
 package com.profiler;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 
 public class MainActivity extends Activity {
+	
+	final static String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,5 +23,10 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    
+
+	public void onCreateProfileClicked(View v) {
+		Log.i(TAG, "onCreateProfileClicked");
+	}
     
 }
