@@ -11,30 +11,47 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.profiler.db.ProfileDbAdapter;
 import com.profiler.models.ProfileModel;
 
 public class MainActivity extends Activity {
-	
+
 	final static String TAG = "MainActivity";
+	Button createProfileButton;
 
 	private FileInputStream is;
 	private BufferedInputStream bis;
 	private WallpaperManager wallpaperManager;
 	private Drawable wallpaperDrawable;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		createProfileButton = (Button) findViewById(R.id.createProfile);
+
+		createProfileButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this,
+						CreateProfileActivity.class);
+				startActivity(intent);
+			}
+		});
 		
 		getProfileList();
 	}
@@ -68,19 +85,5 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//	}
 	}
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    
-
-	public void onCreateProfileClicked(View v) {
-		Log.i(TAG, "onCreateProfileClicked");
-	}
-    
 }
