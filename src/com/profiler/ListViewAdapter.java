@@ -3,6 +3,7 @@ package com.profiler;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -102,33 +104,37 @@ public class ListViewAdapter extends BaseAdapter {
 		}
 	}
 
-	public void setRingTone(String path) {
-		File k = new File(path); // path
-									// is
-									// a
-									// file
-									// to
-		// /sdcard/media/ringtone
+	public void setRingTone(String path) throws IOException {
+		// File audioFile = new File(path);
 
+		//File audioFile = new File("/mnt/sdcard/Music/Maahi.mp3");
+		File audioFile = new File(path);
 		ContentValues values = new ContentValues();
-		values.put(MediaStore.MediaColumns.DATA, k.getAbsolutePath());
-		values.put(MediaStore.MediaColumns.TITLE, "My Song title");
-		values.put(MediaStore.MediaColumns.SIZE, 215454);
+		values.put(MediaStore.MediaColumns.DATA, audioFile.getAbsolutePath());
+		values.put(MediaStore.MediaColumns.TITLE, audioFile.getName());
+		values.put(MediaStore.MediaColumns.SIZE, audioFile.getTotalSpace());
 		values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
-		values.put(MediaStore.Audio.Media.ARTIST, "Madonna");
-		values.put(MediaStore.Audio.Media.DURATION, 230);
 		values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
 		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
 		values.put(MediaStore.Audio.Media.IS_ALARM, false);
 		values.put(MediaStore.Audio.Media.IS_MUSIC, false);
 
 		// Insert it into the database
-		Uri uri = MediaStore.Audio.Media.getContentUriForPath(k
+		Uri uri = MediaStore.Audio.Media.getContentUriForPath(audioFile
 				.getAbsolutePath());
 		Uri newUri = mContext.getContentResolver().insert(uri, values);
 
 		RingtoneManager.setActualDefaultRingtoneUri(mContext,
 				RingtoneManager.TYPE_RINGTONE, newUri);
+	}
+
+	private String removeExtras(String path) {
+		path = path.replace("/file:", "");
+		path = path.replace("/content:", "");
+		path = path.replace("%20", " ");
+		path = path.replace("/storage/emulated/0", "/mnt/sdcard");
+
+		return path;
 	}
 
 	class SetProfileTask extends AsyncTask<ProfileModel, Void, Void> {
@@ -145,7 +151,12 @@ public class ListViewAdapter extends BaseAdapter {
 		protected Void doInBackground(ProfileModel... params) {
 			profile = params[0];
 			changeWallpaper(profile.getWallpaper());
-			setRingTone(profile.getRingtone());
+			try {
+				setRingTone(profile.getRingtone());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 		}
 
