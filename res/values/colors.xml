@@ -2,5 +2,6 @@
 <resources>
 
     <color name="dk_gray">#80000000</color>
+    <color name="dkr_gray">#B3000000</color>
 
 </resources>
