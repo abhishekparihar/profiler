@@ -1,10 +1,13 @@
 package com.profiler;
 
+
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
@@ -21,18 +24,22 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+import com.profiler.db.ProfileDbAdapter;
+import com.profiler.models.ProfileModel;
 
 public class MainActivity extends Activity {
 
 	final static String TAG = "MainActivity";
+	Button buttonAdd;
 
 	private FileInputStream is;
 	private BufferedInputStream bis;
 	private WallpaperManager wallpaperManager;
 	private Drawable wallpaperDrawable;
-
 	protected IntentFilter ifilter;
 	private NfcAdapter adapter;
 
@@ -67,6 +74,27 @@ public class MainActivity extends Activity {
 		registerReceiver(receiver, ifilter);
 
 		super.onResume();
+		buttonAdd = (Button) findViewById(R.id.buttonAdd);
+
+		buttonAdd.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this,
+						CreateProfileActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		getProfileList();
+	}
+
+	private void getProfileList() {
+		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
+		List<ProfileModel> mList=mProfileDbAdapter.getProfileList();
+		
+		
 	}
 
 	public void onChangeClicked(View v) {
@@ -94,12 +122,6 @@ public class MainActivity extends Activity {
 		// }
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 
 	public void onCreateProfileClicked(View v) {
 		Log.i(TAG, "onCreateProfileClicked");
