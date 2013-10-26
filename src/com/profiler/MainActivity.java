@@ -79,11 +79,9 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				/*Intent intent = new Intent(MainActivity.this,
+				Intent intent = new Intent(MainActivity.this,
 						CreateProfileActivity.class);
-				startActivity(intent);*/
-				
-				setRingtoneVolume(1);
+				startActivity(intent);
 			}
 		});
 
