@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void setRingTone(String path) {
-		File k = new File(path); // path is a file to sdcard/media/ringtone
+		File k = new File(removeExtras(path)); // path is a file to sdcard/media/ringtone
 
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.MediaColumns.DATA, k.getAbsolutePath());
@@ -142,6 +142,15 @@ public class MainActivity extends Activity {
 
 		RingtoneManager.setActualDefaultRingtoneUri(MainActivity.this,
 				RingtoneManager.TYPE_RINGTONE, newUri);
+	}
+	
+	private String removeExtras(String path) {
+		path = path.replace("/file:", "");
+		path = path.replace("/content:", "");
+		path = path.replace("%20", " ");
+		path = path.replace("/storage/emulated/0", "/mnt/sdcard");
+
+		return path;
 	}
 	
 	private void setRingtoneVolume(int volume){
