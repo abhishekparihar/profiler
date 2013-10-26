@@ -1,5 +1,6 @@
 package com.profiler;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -28,12 +30,13 @@ public class CreateProfileActivity extends Activity {
 	int volumeLevel;
 	ProfileModel profileModel;
 	final static String TAG = "CreateProfileActivity";
+	EditText txtProfileName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_profile_activity);
-
+		txtProfileName = (EditText) findViewById(R.id.txtProfileName);
 		openGallery = (Button) findViewById(R.id.openGallery);
 		pickAudio = (Button) findViewById(R.id.pickAudio);
 
@@ -117,20 +120,21 @@ public class CreateProfileActivity extends Activity {
 		} else if (requestCode == OPEN_AUDIO && resultCode == RESULT_OK
 				&& data != null) {
 			Uri uri = data.getData();
-
-			Log.v("", "Path " + getRealPathFromURI(uri));
+			// Log.v("", "Path " + uri.toString());
+			// Log.v("", "Path " + new File(uri.toString()).getAbsolutePath());
+			// Log.v("", "Path " + getRealPathFromURI(uri));
 			profileModel.setRingtone(uri.toString());
 		}
 
 	}
 
 	private String getRealPathFromURI(Uri contentUri) {
-		String[] proj = { MediaStore.Images.Media.DATA };
+		String[] proj = { MediaStore.Audio.Media.DATA };
 		Cursor cursor = getContentResolver().query(contentUri, proj, null,
 				null, null);
 		cursor.moveToFirst();
 		int column_index = cursor
-				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
 	}
@@ -140,11 +144,14 @@ public class CreateProfileActivity extends Activity {
 
 		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
 		List<ProfileModel> mList = mProfileDbAdapter.getProfileList();
-
-		profileModel = new ProfileModel(mList.size() + 1, 2, "ring3", "wal1",
-				"car");
+		profileModel.setProfile_id(mList.size() + 1);
+		profileModel.setName(txtProfileName.getText().toString());
+		// addProfileInDb(profileModel);
+		// profileModel = new ProfileModel(mList.size() + 1, 2, "ring3",
+		// "wal1","car");
 
 		addProfileInDb(profileModel);
+		finish();
 	}
 
 	private void addProfileInDb(ProfileModel mProfileModel) {
