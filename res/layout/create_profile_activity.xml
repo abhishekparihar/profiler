@@ -62,7 +62,7 @@
             android:id="@+id/imageViewMode"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/vibrate" />
+            android:src="@drawable/volume_silence" />
 
         <SeekBar
             android:id="@+id/volumeBar"

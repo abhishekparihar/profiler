@@ -32,6 +32,8 @@ public class CreateProfileActivity extends Activity {
 	ProfileModel profileModel;
 	final static String TAG = "CreateProfileActivity";
 	EditText txtProfileName;
+	ImageView imgVolume;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class CreateProfileActivity extends Activity {
 		pickAudio = (Button) findViewById(R.id.pickAudio);
 
 		volumeBar = (SeekBar) findViewById(R.id.volumeBar);
+		
+		imgVolume=(ImageView)findViewById(R.id.imageViewMode);
 		
 		AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
 		int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
@@ -86,6 +90,17 @@ public class CreateProfileActivity extends Activity {
 				// TODO Auto-generated method stub
 				volumeLevel = progress;
 				profileModel.setVolume(volumeLevel);
+				
+				if(progress == 0){
+					imgVolume.setImageResource(R.drawable.volume_silence);
+				}else if(progress == 1){
+					imgVolume.setImageResource(R.drawable.vibrate);
+				}else{
+					imgVolume.setImageResource(R.drawable.volume_high);
+				}
+				
+				Log.i(TAG, "volume = "+progress);
+				
 				/*
 				 * Toast.makeText(CreateProfileActivity.this, "Volume Level " +
 				 * volumeLevel, Toast.LENGTH_SHORT) .show();
