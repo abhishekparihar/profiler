@@ -26,6 +26,15 @@ public class ProfileModel {
 		this.name = "";
 	}
 
+	public ProfileModel(int profile_id, int volume, String ringtone,
+			String wallpaper, String name) {
+		this.profile_id = profile_id;
+		this.volume = volume;
+		this.ringtone = ringtone;
+		this.wallpaper = wallpaper;
+		this.name = name;
+	}
+
 	public int getProfile_id() {
 		return profile_id;
 	}

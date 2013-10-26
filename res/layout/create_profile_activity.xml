@@ -37,12 +37,13 @@
         android:text="Pick Audio" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/butSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="Add" />
+        android:text="Save"
+        android:onClick="onSaveBtnClicked" />
 
 </RelativeLayout>

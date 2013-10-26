@@ -1,7 +1,8 @@
 package com.profiler;
 
+import java.util.List;
+
 import android.app.Activity;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -16,16 +17,17 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+import com.profiler.db.ProfileDbAdapter;
 import com.profiler.models.ProfileModel;
 
 public class CreateProfileActivity extends Activity {
 
-	final static String TAG = "MainActivity";
 	final int OPEN_GALLERY = 100, OPEN_AUDIO = 200;
 	Button openGallery, pickAudio;
 	SeekBar volumeBar;
 	int volumeLevel;
 	ProfileModel profileModel;
+	final static String TAG = "CreateProfileActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,5 +133,22 @@ public class CreateProfileActivity extends Activity {
 				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
+	}
+
+	public void onSaveBtnClicked(View v) {
+		Log.i(TAG, "onSaveBtnClicked");
+
+		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
+		List<ProfileModel> mList = mProfileDbAdapter.getProfileList();
+
+		profileModel = new ProfileModel(mList.size() + 1, 2, "ring3", "wal1",
+				"car");
+
+		addProfileInDb(profileModel);
+	}
+
+	private void addProfileInDb(ProfileModel mProfileModel) {
+		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
+		mProfileDbAdapter.create(mProfileModel);
 	}
 }
