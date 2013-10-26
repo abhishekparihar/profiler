@@ -69,7 +69,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:max="16" />
+            android:indeterminate="false"
+            android:max="16"
+            android:progress="5"
+            android:progressDrawable="@drawable/volume_bar"
+            android:thumb="@drawable/progress_handle_bg" />
     </LinearLayout>
 
     <TextView
