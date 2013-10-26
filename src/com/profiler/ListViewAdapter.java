@@ -2,14 +2,15 @@ package com.profiler;
 
 import java.util.List;
 
-import com.profiler.models.ProfileModel;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.profiler.models.ProfileModel;
 
 public class ListViewAdapter extends BaseAdapter {
 	
@@ -51,6 +52,14 @@ public class ListViewAdapter extends BaseAdapter {
 
 		textViewName.setText(mList.get(position).getName());
 
+		convertView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		return convertView;
 	}
 
