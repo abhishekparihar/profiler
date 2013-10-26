@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -41,6 +42,11 @@ public class CreateProfileActivity extends Activity {
 		pickAudio = (Button) findViewById(R.id.pickAudio);
 
 		volumeBar = (SeekBar) findViewById(R.id.volumeBar);
+		
+		AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
+		int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+		volumeBar.setMax(streamMaxVolume);
+		
 		openGallery.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -123,18 +129,18 @@ public class CreateProfileActivity extends Activity {
 			// Log.v("", "Path " + uri.toString());
 			// Log.v("", "Path " + new File(uri.toString()).getAbsolutePath());
 			// Log.v("", "Path " + getRealPathFromURI(uri));
-			profileModel.setRingtone(uri.toString());
+			profileModel.setRingtone(uri.getPath());
 		}
 
 	}
 
 	private String getRealPathFromURI(Uri contentUri) {
-		String[] proj = { MediaStore.Audio.Media.DATA };
+		String[] proj = { MediaStore.MediaColumns.DATA };
 		Cursor cursor = getContentResolver().query(contentUri, proj, null,
 				null, null);
 		cursor.moveToFirst();
 		int column_index = cursor
-				.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+				.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
 	}
