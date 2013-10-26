@@ -1,5 +1,10 @@
 package com.profiler;
 
+import java.util.List;
+
+import com.profiler.db.ProfileDbAdapter;
+import com.profiler.models.ProfileModel;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,9 +20,10 @@ import android.widget.ImageView;
 
 public class CreateProfileActivity extends Activity {
 
-	final static String TAG = "MainActivity";
+	final static String TAG = "CreateProfileActivity";
 	final int OPEN_GALLERY = 100;
 	Button openGallery;
+	private ProfileModel mProfileModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,5 +68,21 @@ public class CreateProfileActivity extends Activity {
 
 		}
 
+	}
+	
+	public void onSaveBtnClicked(View v) {
+		Log.i(TAG, "onSaveBtnClicked");
+	        
+	        ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
+			List<ProfileModel> mList=mProfileDbAdapter.getProfileList();
+	        
+	        mProfileModel=new ProfileModel(mList.size()+1,2,"ring3","wal1","car");
+		
+		addProfileInDb(mProfileModel);
+	}
+	
+	private void addProfileInDb(ProfileModel mProfileModel){
+		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
+		mProfileDbAdapter.create(mProfileModel);
 	}
 }
