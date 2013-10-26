@@ -26,7 +26,11 @@
         <EditText
             android:id="@+id/txtProfileName"
             android:layout_width="fill_parent"
+            android:textColor="@color/white"
             android:layout_height="match_parent"
+            android:hint="Enter Name"
+            android:textColorHint="#E6E6E6"
+            android:textSize="15sp"
             android:layout_gravity="bottom|end" />
     </LinearLayout>
 
@@ -102,7 +106,6 @@
             android:layout_gravity="center_vertical"
             android:indeterminate="false"
             android:max="16"
-            android:progress="5"
             android:progressDrawable="@drawable/volume_bar"
             android:thumb="@drawable/progress_handle_bg" />
     </LinearLayout>
@@ -132,7 +135,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="@string/select_ringtone"
             android:textColor="@color/white"
             android:textSize="13sp"
             android:textStyle="italic" />
