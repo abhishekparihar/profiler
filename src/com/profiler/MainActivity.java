@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.w3c.dom.ls.LSInput;
+
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
@@ -27,6 +29,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.profiler.db.ProfileDbAdapter;
 import com.profiler.models.ProfileModel;
@@ -42,6 +45,7 @@ public class MainActivity extends Activity {
 	private Drawable wallpaperDrawable;
 	protected IntentFilter ifilter;
 	private NfcAdapter adapter;
+	private ListView listViewProfiles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,8 @@ public class MainActivity extends Activity {
 		ifilter.addAction("android.nfc.action.NDEF_DISCOVERED");
 		ifilter.addCategory("android.intent.category.LAUNCHER");
 
+		
+		listViewProfiles = (ListView)findViewById(R.id.listViewProfiles);
 		// Intent nfcReceiver = new Intent(MainActivity.this,
 		// NfcReceiver.class);
 
@@ -66,7 +72,15 @@ public class MainActivity extends Activity {
 		 * NfcReceiver receiver = new NfcReceiver(); registerReceiver(receiver,
 		 * filter);
 		 */
+		
+		
 
+	}
+
+	private void showList(List<ProfileModel> list) {
+		ListViewAdapter mAdapter = new ListViewAdapter(this,list);
+		listViewProfiles.setAdapter(mAdapter);
+		
 	}
 
 	@Override
@@ -87,15 +101,15 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		getProfileList();
+		showList(getProfileList());
 	}
 
-	private void getProfileList() {
+	private List<ProfileModel> getProfileList() {
 		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
 		List<ProfileModel> mList=mProfileDbAdapter.getProfileList();
 		
 		Log.i(TAG, "test");
-		
+		return mList;
 		
 	}
 
