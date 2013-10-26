@@ -3,19 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <LinearLayout
+        android:id="@+id/wallpaperLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/openGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Wallpaper" />
+
+        <ImageView
+            android:id="@+id/thumbImg"
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/volumeBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wallpaperLayout"
+        android:max="16" />
+
     <Button
-        android:id="@+id/openGallery"
+        android:id="@+id/pickAudio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change Wallpaper" />
-
-    <ImageView
-        android:id="@+id/thumbImg"
-        android:layout_width="100dip"
-        android:layout_height="100dip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:scaleType="fitXY" />
+        android:layout_below="@id/volumeBar"
+        android:text="Pick Audio" />
 
     <Button
         android:id="@+id/button1"

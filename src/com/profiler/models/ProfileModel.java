@@ -18,6 +18,14 @@ public class ProfileModel {
 		this.name = profileParams.get("name");
 	}
 
+	public ProfileModel() {
+		this.profile_id = 0;
+		this.volume = -1;
+		this.ringtone = "";
+		this.wallpaper = "";
+		this.name = "";
+	}
+
 	public int getProfile_id() {
 		return profile_id;
 	}
