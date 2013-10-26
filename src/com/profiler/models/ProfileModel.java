@@ -20,7 +20,7 @@ public class ProfileModel {
 
 	public ProfileModel() {
 		this.profile_id = 0;
-		this.volume = -1;
+		this.volume = 0;
 		this.ringtone = "";
 		this.wallpaper = "";
 		this.name = "";

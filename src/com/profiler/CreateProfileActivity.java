@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -41,6 +42,11 @@ public class CreateProfileActivity extends Activity {
 		pickAudio = (Button) findViewById(R.id.pickAudio);
 
 		volumeBar = (SeekBar) findViewById(R.id.volumeBar);
+		
+		AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
+		int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+		volumeBar.setMax(streamMaxVolume);
+		
 		openGallery.setOnClickListener(new OnClickListener() {
 
 			@Override

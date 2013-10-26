@@ -12,7 +12,9 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.WallpaperManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,11 +23,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -90,6 +96,59 @@ public class MainActivity extends Activity {
 		onClickReadTag();
 	}
 
+	public void changeWallpaper(String path) {
+		FileInputStream is;
+		BufferedInputStream bis;
+		WallpaperManager wallpaperManager;
+		Drawable wallpaperDrawable;
+
+		File sdcard = Environment.getExternalStorageDirectory();
+		try {
+			is = new FileInputStream(new File(path));
+			bis = new BufferedInputStream(is);
+			Bitmap bitmap = BitmapFactory.decodeStream(bis);
+			Bitmap useThisBitmap = Bitmap.createBitmap(bitmap);
+			// bitmap.recycle();
+			// if(imagePath!=null){
+			System.out.println("Hi I am try to open Bit map");
+			wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
+			wallpaperDrawable = wallpaperManager.getDrawable();
+			wallpaperManager.setBitmap(useThisBitmap);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void setRingTone(String path) {
+		File k = new File(path); // path
+									// is
+									// a
+									// file
+									// to
+		// /sdcard/media/ringtone
+
+		ContentValues values = new ContentValues();
+		values.put(MediaStore.MediaColumns.DATA, k.getAbsolutePath());
+		values.put(MediaStore.MediaColumns.TITLE, "My Song title");
+		values.put(MediaStore.MediaColumns.SIZE, 215454);
+		values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
+		values.put(MediaStore.Audio.Media.ARTIST, "Madonna");
+		values.put(MediaStore.Audio.Media.DURATION, 230);
+		values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
+		values.put(MediaStore.Audio.Media.IS_ALARM, false);
+		values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+
+		// Insert it into the database
+		Uri uri = MediaStore.Audio.Media.getContentUriForPath(k
+				.getAbsolutePath());
+		Uri newUri = MainActivity.this.getContentResolver().insert(uri, values);
+
+		RingtoneManager.setActualDefaultRingtoneUri(MainActivity.this,
+				RingtoneManager.TYPE_RINGTONE, newUri);
+	}
+	
 	private void setRingtoneVolume(int volume){
 		if(volume == 0){
 			AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
@@ -100,9 +159,35 @@ public class MainActivity extends Activity {
 			AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
 			int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
 			int streamMinVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-			Toast.makeText(MainActivity.this, Integer.toString(streamMinVolume), Toast.LENGTH_LONG).show(); //I got 7
 			audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, AudioManager.FLAG_PLAY_SOUND);
 		}
+	}
+	
+	
+	class SetProfileTask extends AsyncTask<ProfileModel, Void, Void> {
+		ProgressDialog progressDialog;
+		ProfileModel profile;
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog = ProgressDialog.show(MainActivity.this, "",
+					"Activating profile");
+		}
+
+		@Override
+		protected Void doInBackground(ProfileModel... params) {
+			profile = params[0];
+			changeWallpaper(profile.getWallpaper());
+			setRingTone(profile.getRingtone());
+			setRingtoneVolume(profile.getVolume());
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			progressDialog.dismiss();
+		}
+
 	}
 
 	private List<ProfileModel> getProfileList() {
@@ -162,8 +247,8 @@ public class MainActivity extends Activity {
 			if (!mNfcAdapter.isEnabled()){  
 				new AlertDialog.Builder(this)  
 				.setTitle("NFC Dialog")
-				.setMessage("Sample message")
-				.setPositiveButton("Update Settings", new DialogInterface.OnClickListener() {  
+				.setMessage("Please switch on NFC")
+				.setPositiveButton("Settings", new DialogInterface.OnClickListener() {  
 					public void onClick(DialogInterface arg0, int arg1) {  
 						Intent setnfc = new Intent(Settings.ACTION_WIRELESS_SETTINGS);  
 						startActivity(setnfc);  
@@ -180,6 +265,8 @@ public class MainActivity extends Activity {
 			Toast.makeText(context, "Sorry, NFC adapter not available on your device.", Toast.LENGTH_SHORT).show();  
 		} 
 	}
+	
+	
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -200,8 +287,19 @@ public class MainActivity extends Activity {
 				for (int b = 1; b<payload.length; b++) { // skip SOH  
 					result += (char) payload[b];  
 				}  
+				
+				setCurrentProfile(result);
+				
 				Toast.makeText(getApplicationContext(), "Tag Contains >>>>>>>> \n " + result, Toast.LENGTH_LONG).show();  
 			}  
 		} 
+	}
+
+	private void setCurrentProfile(String result) {
+		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
+		ProfileModel mProfileModel=mProfileDbAdapter.getProfile(Integer.valueOf(result));
+
+		if(mProfileModel != null)
+			new SetProfileTask().execute(mProfileModel);		
 	}
 }

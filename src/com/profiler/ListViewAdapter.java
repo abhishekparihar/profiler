@@ -72,88 +72,10 @@ public class ListViewAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				new SetProfileTask().execute(mList.get(position));
+				
 			}
 		});
 		return convertView;
-	}
-
-	public void changeWallpaper(String path) {
-		FileInputStream is;
-		BufferedInputStream bis;
-		WallpaperManager wallpaperManager;
-		Drawable wallpaperDrawable;
-
-		File sdcard = Environment.getExternalStorageDirectory();
-		try {
-			is = new FileInputStream(new File(path));
-			bis = new BufferedInputStream(is);
-			Bitmap bitmap = BitmapFactory.decodeStream(bis);
-			Bitmap useThisBitmap = Bitmap.createBitmap(bitmap);
-			// bitmap.recycle();
-			// if(imagePath!=null){
-			System.out.println("Hi I am try to open Bit map");
-			wallpaperManager = WallpaperManager.getInstance(mContext);
-			wallpaperDrawable = wallpaperManager.getDrawable();
-			wallpaperManager.setBitmap(useThisBitmap);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void setRingTone(String path) {
-		File k = new File(path); // path
-									// is
-									// a
-									// file
-									// to
-		// /sdcard/media/ringtone
-
-		ContentValues values = new ContentValues();
-		values.put(MediaStore.MediaColumns.DATA, k.getAbsolutePath());
-		values.put(MediaStore.MediaColumns.TITLE, "My Song title");
-		values.put(MediaStore.MediaColumns.SIZE, 215454);
-		values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
-		values.put(MediaStore.Audio.Media.ARTIST, "Madonna");
-		values.put(MediaStore.Audio.Media.DURATION, 230);
-		values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
-		values.put(MediaStore.Audio.Media.IS_ALARM, false);
-		values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-
-		// Insert it into the database
-		Uri uri = MediaStore.Audio.Media.getContentUriForPath(k
-				.getAbsolutePath());
-		Uri newUri = mContext.getContentResolver().insert(uri, values);
-
-		RingtoneManager.setActualDefaultRingtoneUri(mContext,
-				RingtoneManager.TYPE_RINGTONE, newUri);
-	}
-
-	class SetProfileTask extends AsyncTask<ProfileModel, Void, Void> {
-		ProgressDialog progressDialog;
-		ProfileModel profile;
-
-		@Override
-		protected void onPreExecute() {
-			progressDialog = ProgressDialog.show(mContext, "",
-					"Activating profile");
-		}
-
-		@Override
-		protected Void doInBackground(ProfileModel... params) {
-			profile = params[0];
-			changeWallpaper(profile.getWallpaper());
-			setRingTone(profile.getRingtone());
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			progressDialog.dismiss();
-		}
-
 	}
 
 }
