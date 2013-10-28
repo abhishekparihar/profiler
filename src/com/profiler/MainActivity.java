@@ -1,7 +1,5 @@
 package com.profiler;
 
-
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,11 +45,10 @@ public class MainActivity extends Activity {
 
 	final static String TAG = "MainActivity";
 	Button buttonAdd;
-	private NfcAdapter mNfcAdapter;  
-	private IntentFilter[] mReadTagFilters;  
-	private PendingIntent mNfcPendingIntent;  
+	private NfcAdapter mNfcAdapter;
+	private IntentFilter[] mReadTagFilters;
+	private PendingIntent mNfcPendingIntent;
 	private Context context;
-
 	private FileInputStream is;
 	private BufferedInputStream bis;
 	private WallpaperManager wallpaperManager;
@@ -64,25 +61,19 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		listViewProfiles = (ListView)findViewById(R.id.listViewProfiles);
-
+		listViewProfiles = (ListView) findViewById(R.id.listViewProfiles);
 	}
 
 	private void showList(List<ProfileModel> list) {
-		ListViewAdapter mAdapter = new ListViewAdapter(this,list);
+		ListViewAdapter mAdapter = new ListViewAdapter(this, list);
 		listViewProfiles.setAdapter(mAdapter);
-
 	}
 
 	@Override
 	protected void onResume() {
-
 		super.onResume();
 		buttonAdd = (Button) findViewById(R.id.buttonAdd);
-
 		buttonAdd.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this,
@@ -90,7 +81,6 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-
 		showList(getProfileList());
 		setNFCAdapter();
 		onClickReadTag();
@@ -101,26 +91,22 @@ public class MainActivity extends Activity {
 		BufferedInputStream bis;
 		WallpaperManager wallpaperManager;
 		Drawable wallpaperDrawable;
-
 		File sdcard = Environment.getExternalStorageDirectory();
 		try {
 			is = new FileInputStream(new File(path));
 			bis = new BufferedInputStream(is);
 			Bitmap bitmap = BitmapFactory.decodeStream(bis);
 			Bitmap useThisBitmap = Bitmap.createBitmap(bitmap);
-			// bitmap.recycle();
-			// if(imagePath!=null){
 			wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
 			wallpaperDrawable = wallpaperManager.getDrawable();
 			wallpaperManager.setBitmap(useThisBitmap);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void setRingTone(String path) throws IOException {
-		//File audioFile = new File("/mnt/sdcard/Music/Maahi.mp3");
+		// File audioFile = new File("/mnt/sdcard/Music/Maahi.mp3");
 		File audioFile = new File(path);
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.MediaColumns.DATA, audioFile.getAbsolutePath());
@@ -149,22 +135,24 @@ public class MainActivity extends Activity {
 
 		return path;
 	}
-	
-	private void setRingtoneVolume(int volume){
-		if(volume == 0){
-			AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
-			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT); 
-		}else if(volume >= 1){
-			volume=volume-1;
 
-			AudioManager audioManager =(AudioManager) getSystemService(AUDIO_SERVICE);
-			int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-			int streamMinVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-			audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, AudioManager.FLAG_PLAY_SOUND);
+	private void setRingtoneVolume(int volume) {
+		if (volume == 0) {
+			AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+			audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+		} else if (volume >= 1) {
+			volume = volume - 1;
+
+			AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+			int streamMaxVolume = audioManager
+					.getStreamMaxVolume(AudioManager.STREAM_RING);
+			int streamMinVolume = audioManager
+					.getStreamVolume(AudioManager.STREAM_RING);
+			audioManager.setStreamVolume(AudioManager.STREAM_RING, volume,
+					AudioManager.FLAG_PLAY_SOUND);
 		}
 	}
-	
-	
+
 	class SetProfileTask extends AsyncTask<ProfileModel, Void, Void> {
 		ProgressDialog progressDialog;
 		ProfileModel profile;
@@ -197,8 +185,7 @@ public class MainActivity extends Activity {
 
 	private List<ProfileModel> getProfileList() {
 		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
-		List<ProfileModel> mList=mProfileDbAdapter.getProfileList();
-
+		List<ProfileModel> mList = mProfileDbAdapter.getProfileList();
 		Log.i(TAG, "test");
 		return mList;
 
@@ -225,86 +212,94 @@ public class MainActivity extends Activity {
 		}
 	}
 
-
 	public void onCreateProfileClicked(View v) {
 		Log.i(TAG, "onCreateProfileClicked");
 	}
 
 	private void setNFCAdapter() {
-		context = getApplicationContext();  
-		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);  
+		context = getApplicationContext();
+		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-		mNfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,  
-				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP  
-						| Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);  
+		mNfcPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+				getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
+				| Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
 
+		IntentFilter ndefDetected = new IntentFilter(
+				NfcAdapter.ACTION_NDEF_DISCOVERED);
+		ndefDetected.addDataScheme("http");
 
-		IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED); 
-		ndefDetected.addDataScheme("http");  
-
-		IntentFilter techDetected = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);  
+		IntentFilter techDetected = new IntentFilter(
+				NfcAdapter.ACTION_TECH_DISCOVERED);
 
 		mReadTagFilters = new IntentFilter[] { ndefDetected, techDetected };
 
 	}
+
 	public void onClickReadTag() {
-		if(mNfcAdapter != null) {  
-			if (!mNfcAdapter.isEnabled()){  
-				new AlertDialog.Builder(this)  
-				.setTitle("NFC Dialog")
-				.setMessage("Please switch on NFC")
-				.setPositiveButton("Settings", new DialogInterface.OnClickListener() {  
-					public void onClick(DialogInterface arg0, int arg1) {  
-						Intent setnfc = new Intent(Settings.ACTION_WIRELESS_SETTINGS);  
-						startActivity(setnfc);  
-					}  
-				})  
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {  
-					public void onCancel(DialogInterface dialog) {  
-						dialog.dismiss(); // exit application if user cancels  
-					}                      
-				}).create().show();  
-			}  
-			mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mReadTagFilters, null);  
-		} else {  
-			Toast.makeText(context, "Sorry, NFC adapter not available on your device.", Toast.LENGTH_SHORT).show();  
-		} 
+		if (mNfcAdapter != null) {
+			if (!mNfcAdapter.isEnabled()) {
+				new AlertDialog.Builder(this)
+						.setTitle("NFC Dialog")
+						.setMessage("Please switch on NFC")
+						.setPositiveButton("Settings",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface arg0,
+											int arg1) {
+										Intent setnfc = new Intent(
+												Settings.ACTION_WIRELESS_SETTINGS);
+										startActivity(setnfc);
+									}
+								})
+						.setOnCancelListener(
+								new DialogInterface.OnCancelListener() {
+									public void onCancel(DialogInterface dialog) {
+										dialog.dismiss(); // exit application if
+															// user cancels
+									}
+								}).create().show();
+			}
+			mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent,
+					mReadTagFilters, null);
+		} else {
+			Toast.makeText(context,
+					"Sorry, NFC adapter not available on your device.",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
-	
-	
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {  
-			NdefMessage[] messages = null;  
-			Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);  
-			if (rawMsgs != null) {  
-				messages = new NdefMessage[rawMsgs.length];  
-				for (int i = 0; i < rawMsgs.length; i++) {  
-					messages[i] = (NdefMessage) rawMsgs[i];  
-				}  
-			}  
-			if(messages[0] != null) {  
-				String result="";  
-				byte[] payload = messages[0].getRecords()[0].getPayload();  
-				// this assumes that we get back am SOH followed by host/code  
-				for (int b = 1; b<payload.length; b++) { // skip SOH  
-					result += (char) payload[b];  
-				}  
-				
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+			NdefMessage[] messages = null;
+			Parcelable[] rawMsgs = intent
+					.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+			if (rawMsgs != null) {
+				messages = new NdefMessage[rawMsgs.length];
+				for (int i = 0; i < rawMsgs.length; i++) {
+					messages[i] = (NdefMessage) rawMsgs[i];
+				}
+			}
+			if (messages[0] != null) {
+				String result = "";
+				byte[] payload = messages[0].getRecords()[0].getPayload();
+				// this assumes that we get back am SOH followed by host/code
+				for (int b = 1; b < payload.length; b++) { // skip SOH
+					result += (char) payload[b];
+				}
 				setCurrentProfile(result);
-				
-				//Toast.makeText(getApplicationContext(), "Tag Contains >>>>>>>> \n " + result, Toast.LENGTH_LONG).show();  
-			}  
-		} 
+				// Toast.makeText(getApplicationContext(),
+				// "Tag Contains >>>>>>>> \n " + result,
+				// Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	private void setCurrentProfile(String result) {
 		ProfileDbAdapter mProfileDbAdapter = new ProfileDbAdapter(this);
-		ProfileModel mProfileModel=mProfileDbAdapter.getProfile(Integer.valueOf(result));
-
-		if(mProfileModel != null)
-			new SetProfileTask().execute(mProfileModel);		
+		ProfileModel mProfileModel = mProfileDbAdapter.getProfile(Integer
+				.valueOf(result));
+		if (mProfileModel != null)
+			new SetProfileTask().execute(mProfileModel);
 	}
 }
